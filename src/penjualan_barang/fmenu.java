@@ -114,6 +114,9 @@ public class fmenu extends javax.swing.JFrame {
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
         // TODO add your handling code here:
+        fpenjualan fb = new fpenjualan();
+        fb.setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     /**
