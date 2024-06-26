@@ -608,7 +608,7 @@ public class fpenjualan extends javax.swing.JFrame {
             p.setString(2, r.getString("kd_barang"));
             p.setString(3, r.getString("nama_barang"));
             p.setString(4, r.getString("hsatuan"));
-            p.setString(5, r.getString("jumlah_beli"));
+            p.setString(5, r.getString("jumlah_jual"));
             p.setString(6, r.getString("harga"));
             p.setString(7, txt_bayar.getText());
             p.setString(8, txt_kembalian.getText());
