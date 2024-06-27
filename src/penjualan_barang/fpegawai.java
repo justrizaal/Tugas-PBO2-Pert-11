@@ -4,17 +4,65 @@
  */
 package penjualan_barang;
 
+import java.sql.*;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author Admin
  */
 public class fpegawai extends javax.swing.JFrame {
-
+    private DefaultTableModel model;
     /**
      * Creates new form fpegawai
      */
     public fpegawai() {
         initComponents();
+        model = new DefaultTableModel();
+
+        tbarang.setModel(model);
+
+        model.addColumn("Username");
+        model.addColumn("Password");
+        model.addColumn("jenis_kelamin");
+        model.addColumn("email");
+        model.addColumn("no_telp");
+        model.addColumn("agama");
+        model.addColumn("alamat");
+        loadData();
+    }
+    
+    public void loadData() {
+       btn_tambah.setEnabled(true);
+        btn_ubah.setEnabled(false);
+        txt_username.setEnabled(true);
+        model.getDataVector().removeAllElements();
+        model.fireTableDataChanged();
+        
+        try {
+            Connection c = Koneksi.getKoneksi();
+            Statement s = c.createStatement();
+
+            String sql = "SELECT * FROM tbl_login";
+            ResultSet r = s.executeQuery(sql);
+
+            while (r.next()) {
+                Object[] o = new Object[7];
+                o[0] = r.getString("username");
+                o[1] = r.getString("password");
+                o[2] = r.getString("jenis_kelamin");
+                o[3] = r.getString("email");
+                o[4] = r.getString("no_telp");
+                o[5] = r.getString("agama");
+                o[6] = r.getString("alamat");
+                
+                model.addRow(o);
+            }
+            r.close();
+            s.close();
+        } catch (SQLException e) {
+            System.out.println("Terjadi Error");
+        }
     }
 
     /**
@@ -26,32 +74,33 @@ public class fpegawai extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        btn_back = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txt_username = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jPasswordField1 = new javax.swing.JPasswordField();
+        txt_pw1 = new javax.swing.JPasswordField();
         jLabel4 = new javax.swing.JLabel();
-        jPasswordField2 = new javax.swing.JPasswordField();
+        txt_pw2 = new javax.swing.JPasswordField();
         jLabel5 = new javax.swing.JLabel();
-        jRadioButton1 = new javax.swing.JRadioButton();
-        jRadioButton2 = new javax.swing.JRadioButton();
+        laki = new javax.swing.JRadioButton();
+        wanita = new javax.swing.JRadioButton();
         jLabel6 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        email = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jTextField3 = new javax.swing.JTextField();
+        tbarang = new javax.swing.JTable();
+        notelp = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        agama = new javax.swing.JComboBox<>();
         jLabel9 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        alamat = new javax.swing.JTextField();
+        btn_tambah = new javax.swing.JButton();
+        btn_hapus = new javax.swing.JButton();
+        btn_ubah = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -61,7 +110,12 @@ public class fpegawai extends javax.swing.JFrame {
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Pengolahan Data Pegawai");
 
-        jButton1.setText("Back");
+        btn_back.setText("Back");
+        btn_back.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_backActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -71,7 +125,7 @@ public class fpegawai extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addComponent(btn_back)
                 .addGap(15, 15, 15))
         );
         jPanel1Layout.setVerticalGroup(
@@ -79,7 +133,7 @@ public class fpegawai extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1)
+                    .addComponent(btn_back)
                     .addComponent(jLabel1))
                 .addContainerGap(8, Short.MAX_VALUE))
         );
@@ -98,16 +152,16 @@ public class fpegawai extends javax.swing.JFrame {
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Jeni Kelamin");
 
-        jRadioButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jRadioButton1.setText("Laki-Laki");
-        jRadioButton1.addActionListener(new java.awt.event.ActionListener() {
+        laki.setForeground(new java.awt.Color(255, 255, 255));
+        laki.setText("Laki-Laki");
+        laki.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton1ActionPerformed(evt);
+                lakiActionPerformed(evt);
             }
         });
 
-        jRadioButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jRadioButton2.setText("Wanita");
+        wanita.setForeground(new java.awt.Color(255, 255, 255));
+        wanita.setText("Wanita");
 
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("Email");
@@ -115,7 +169,7 @@ public class fpegawai extends javax.swing.JFrame {
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setText("No Telp");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tbarang.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -126,21 +180,41 @@ public class fpegawai extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        tbarang.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbarangMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tbarang);
 
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Agama");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Islam", "Kristen", "Konghuchu", "Hindu", "Budha" }));
+        agama.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Islam", "Kristen", "Konghuchu", "Hindu", "Budha" }));
 
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
         jLabel9.setText("Alamat");
 
-        jButton2.setText("Tambah");
+        btn_tambah.setText("Tambah");
+        btn_tambah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_tambahActionPerformed(evt);
+            }
+        });
 
-        jButton3.setText("Hapus");
+        btn_hapus.setText("Hapus");
+        btn_hapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_hapusActionPerformed(evt);
+            }
+        });
 
-        jButton4.setText("Ubah");
+        btn_ubah.setText("Ubah");
+        btn_ubah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_ubahActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -164,14 +238,14 @@ public class fpegawai extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(jTextField1)
-                                        .addComponent(jPasswordField1)
-                                        .addComponent(jPasswordField2, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE))
-                                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(txt_username)
+                                        .addComponent(txt_pw1)
+                                        .addComponent(txt_pw2, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE))
+                                    .addComponent(email, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(jRadioButton1)
+                                        .addComponent(laki)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jRadioButton2)))
+                                        .addComponent(wanita)))
                                 .addGap(174, 174, 174)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jLabel9)
@@ -179,16 +253,16 @@ public class fpegawai extends javax.swing.JFrame {
                                     .addComponent(jLabel8))
                                 .addGap(18, 18, 18)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(agama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(notelp, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(alamat, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGap(197, 197, 197)
-                                .addComponent(jButton2)
+                                .addComponent(btn_tambah)
                                 .addGap(146, 146, 146)
-                                .addComponent(jButton3)
+                                .addComponent(btn_hapus)
                                 .addGap(168, 168, 168)
-                                .addComponent(jButton4)))
+                                .addComponent(btn_ubah)))
                         .addGap(0, 123, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -198,38 +272,38 @@ public class fpegawai extends javax.swing.JFrame {
                 .addGap(25, 25, 25)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_username, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(notelp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_pw1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
                     .addComponent(jLabel8)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(agama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
-                            .addComponent(jPasswordField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txt_pw2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(27, 27, 27)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
-                            .addComponent(jRadioButton1)
-                            .addComponent(jRadioButton2))
+                            .addComponent(laki)
+                            .addComponent(wanita))
                         .addGap(22, 22, 22)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel6)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(email, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel9)
-                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(alamat, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 91, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4))
+                    .addComponent(btn_tambah)
+                    .addComponent(btn_hapus)
+                    .addComponent(btn_ubah))
                 .addGap(53, 53, 53)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -253,9 +327,163 @@ public class fpegawai extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
+    private void lakiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lakiActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButton1ActionPerformed
+    }//GEN-LAST:event_lakiActionPerformed
+
+    private void btn_hapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_hapusActionPerformed
+        // TODO add your handling code here:
+        if(txt_username.getText().equals("") ||txt_pw1.getText().equals("") || laki.getText().equals("")|| email.getText().equals("")|| notelp.getText().equals("")|| agama.getSelectedItem().equals("")|| alamat.getText().equals("")){
+            JOptionPane.showMessageDialog(null, "LENGKAPI DATA !", "elekronik berkah", JOptionPane.INFORMATION_MESSAGE);
+        }else{
+        try {
+            String sql ="delete from tbl_login where username='"+txt_username.getText()+"'";
+            java.sql.Connection conn=(Connection)Koneksi.getKoneksi();
+            java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+            pst.execute();
+            JOptionPane.showMessageDialog(this, "berhasil di hapus");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+        loadData();
+        txt_username.setText("");
+        txt_pw1.setText("");
+        txt_pw2.setText("");
+        }
+    }//GEN-LAST:event_btn_hapusActionPerformed
+
+    private void btn_tambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_tambahActionPerformed
+        // TODO add your handling code here:
+        if(txt_username.getText().equals("") ||txt_pw1.getText().equals("") || laki.getText().equals("")|| email.getText().equals("")|| notelp.getText().equals("")|| agama.getSelectedItem().equals("")|| alamat.getText().equals("")){
+            JOptionPane.showMessageDialog(null, "LENGKAPI DATA !", "elekronik berkah", JOptionPane.INFORMATION_MESSAGE);
+        }else{
+            String user = txt_username.getText();
+            String pass = txt_pw1.getText();
+
+            String emaill = email.getText();
+            String notelpp = notelp.getText();
+            String agamaa = (String) agama.getSelectedItem();
+            String alamatt = alamat.getText();
+            String jk ="";
+            if(laki.isSelected()){
+                jk = laki.getText();
+            }else{
+                jk = wanita.getText();
+            }
+            try {
+                Connection c = Koneksi.getKoneksi();
+
+                String sql = "INSERT INTO tbl_login VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+                PreparedStatement p = c.prepareStatement(sql);
+                p.setString(1, user);
+                p.setString(2, pass);
+                p.setString(3, jk);
+                p.setString(4, emaill);
+                p.setString(5, notelpp);
+                p.setString(6, agamaa);
+                p.setString(7, alamatt);
+                p.executeUpdate();
+                p.close();
+            } catch (SQLException e) {
+                System.out.println("Terjadi Error");
+            } finally {
+                loadData();
+                txt_username.setText("");
+                txt_pw1.setText("");
+                txt_pw2.setText("");
+                buttonGroup1.clearSelection();
+                email.setText("");
+                notelp.setText("");
+                agama.setSelectedItem("");
+                alamat.setText("");
+
+                JOptionPane.showMessageDialog(null, "Data berhasil tersimpan", "Pelabuhan App", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_btn_tambahActionPerformed
+
+    private void btn_ubahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ubahActionPerformed
+        // TODO add your handling code here:
+        int i = tbarang.getSelectedRow();
+        if (i == -1) {
+            return;
+        }
+        String user = (String) model.getValueAt(i, 0);
+        try {
+            Connection c = Koneksi.getKoneksi();
+            String jk ="";
+            if(laki.isSelected()){
+                jk = laki.getText();
+            }else{
+                jk = wanita.getText();
+            }
+            String sql = "UPDATE  tbl_login SET password =  '" + txt_pw1.getText() + "', jenis_kelamin='"+ jk +"' WHERE  username ='" + user + "'";
+            PreparedStatement p = c.prepareStatement(sql);
+            p.executeUpdate();
+            p.close();
+        } catch (SQLException e) {
+            System.out.println("Terjadi Error");
+        } finally {
+            loadData();
+            txt_username.setText("");
+            txt_pw1.setText("");
+            txt_pw2.setText("");
+            buttonGroup1.clearSelection();
+            email.setText("");
+            notelp.setText("");
+            agama.setSelectedItem("");
+            alamat.setText("");
+            btn_tambah.setEnabled(true);
+            JOptionPane.showMessageDialog(null, "Data berhasil diubah", "Pelabuhan App", JOptionPane.INFORMATION_MESSAGE);
+            txt_username.requestFocus();
+        }
+        
+    }//GEN-LAST:event_btn_ubahActionPerformed
+
+    private void tbarangMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbarangMouseClicked
+        // TODO add your handling code here:
+        btn_tambah.setEnabled(false);
+        btn_ubah.setEnabled(true);
+        txt_username.setEnabled(false);
+        int i = tbarang.getSelectedRow();
+        if (i == -1) {
+            return;
+        }
+        String user = (String) model.getValueAt(i, 0);
+        txt_username.setText(user);
+
+        String pass = (String) model.getValueAt(i, 1);
+        txt_pw1.setText(pass);
+        txt_pw2.setText(pass);
+
+        String jk = (String) model.getValueAt(i, 2);
+        String l ="Laki-Laki";
+        if(jk.equals(l)){
+            laki.setSelected(true);
+        }else{
+            wanita.setSelected(true);
+        }
+
+        String emaill = (String) model.getValueAt(i, 3);
+        email.setText(emaill);
+
+        String notelpp = (String) model.getValueAt(i, 4);
+        notelp.setText(notelpp);
+
+        String agamaa = (String) model.getValueAt(i, 5);
+        agama.setSelectedItem(agamaa);
+
+        String alamatt = (String) model.getValueAt(i, 6);
+        alamat.setText(alamatt);
+    }//GEN-LAST:event_tbarangMouseClicked
+
+    private void btn_backActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_backActionPerformed
+        // TODO add your handling code here:
+        fmenu au = new fmenu();
+        au.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_btn_backActionPerformed
 
     /**
      * @param args the command line arguments
@@ -293,11 +521,14 @@ public class fpegawai extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> agama;
+    private javax.swing.JTextField alamat;
+    private javax.swing.JButton btn_back;
+    private javax.swing.JButton btn_hapus;
+    private javax.swing.JButton btn_tambah;
+    private javax.swing.JButton btn_ubah;
+    private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JTextField email;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -309,15 +540,13 @@ public class fpegawai extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JPasswordField jPasswordField2;
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
+    private javax.swing.JRadioButton laki;
+    private javax.swing.JTextField notelp;
+    private javax.swing.JTable tbarang;
+    private javax.swing.JPasswordField txt_pw1;
+    private javax.swing.JPasswordField txt_pw2;
+    private javax.swing.JTextField txt_username;
+    private javax.swing.JRadioButton wanita;
     // End of variables declaration//GEN-END:variables
 }
