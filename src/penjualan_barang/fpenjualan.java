@@ -22,6 +22,7 @@ public class fpenjualan extends javax.swing.JFrame {
     public Statement st;
     Connection cn = Koneksi.getKoneksi();
     private DefaultTableModel model;
+    private String currentFaktur;
     /**
      * Creates new form fpenjualan
      */
@@ -591,6 +592,7 @@ public class fpenjualan extends javax.swing.JFrame {
             txt_bayar.setText("");
             txt_kembalian.setText("");
             }else{
+                currentFaktur = nofaktur.getText();
             try {
             Connection c = Koneksi.getKoneksi();
             Statement s = c.createStatement();
@@ -650,7 +652,7 @@ public class fpenjualan extends javax.swing.JFrame {
         // TODO add your handling code here:
         try{
             Desktop.getDesktop().browse(new
-           URL("http://localhost/PenjualanBarang/invoice.php?lap&fk="+nofaktur.getText()+"").toURI());
+           URL("http://localhost/apkpenjualan/invoice.php?lap&fk="+ currentFaktur ).toURI());
             } catch (Exception e){
             System.out.println(e);
         }

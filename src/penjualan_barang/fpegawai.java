@@ -74,7 +74,7 @@ public class fpegawai extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        buttonGroup1 = new javax.swing.ButtonGroup();
+        buttonGroup2 = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         btn_back = new javax.swing.JButton();
@@ -152,6 +152,7 @@ public class fpegawai extends javax.swing.JFrame {
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Jeni Kelamin");
 
+        buttonGroup2.add(laki);
         laki.setForeground(new java.awt.Color(255, 255, 255));
         laki.setText("Laki-Laki");
         laki.addActionListener(new java.awt.event.ActionListener() {
@@ -160,6 +161,7 @@ public class fpegawai extends javax.swing.JFrame {
             }
         });
 
+        buttonGroup2.add(wanita);
         wanita.setForeground(new java.awt.Color(255, 255, 255));
         wanita.setText("Wanita");
 
@@ -392,7 +394,7 @@ public class fpegawai extends javax.swing.JFrame {
                 txt_username.setText("");
                 txt_pw1.setText("");
                 txt_pw2.setText("");
-                buttonGroup1.clearSelection();
+                buttonGroup2.clearSelection();
                 email.setText("");
                 notelp.setText("");
                 agama.setSelectedItem("");
@@ -405,77 +407,84 @@ public class fpegawai extends javax.swing.JFrame {
 
     private void btn_ubahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ubahActionPerformed
         // TODO add your handling code here:
-        int i = tbarang.getSelectedRow();
-        if (i == -1) {
-            return;
-        }
-        String user = (String) model.getValueAt(i, 0);
-        try {
-            Connection c = Koneksi.getKoneksi();
-            String jk ="";
-            if(laki.isSelected()){
+        if (txt_username.getText().equals("") || txt_pw1.getText().equals("") || laki.getText().equals("") || email.getText().equals("") || notelp.getText().equals("") || agama.getSelectedItem().equals("") || alamat.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "Data Belum Lengkap !", "PERINGATAN", JOptionPane.WARNING_MESSAGE);  
+        } else if (!txt_pw1.getText().equals(txt_pw2.getText())) {
+            JOptionPane.showMessageDialog(null, "Password tidak sesuai !", "PERINGATAN", JOptionPane.WARNING_MESSAGE);  
+        } else {
+            String user = txt_username.getText();
+            String pass = txt_pw1.getText();
+            String emaill = email.getText();
+            String notelpp = notelp.getText();
+            String agamaa = (String) agama.getSelectedItem();
+            String alamatt = alamat.getText();
+            String jk = "";
+            if (laki.isSelected()) {
                 jk = laki.getText();
-            }else{
+            } else {
                 jk = wanita.getText();
             }
-            String sql = "UPDATE  tbl_login SET password =  '" + txt_pw1.getText() + "', jenis_kelamin='"+ jk +"' WHERE  username ='" + user + "'";
-            PreparedStatement p = c.prepareStatement(sql);
-            p.executeUpdate();
-            p.close();
-        } catch (SQLException e) {
-            System.out.println("Terjadi Error");
-        } finally {
-            loadData();
-            txt_username.setText("");
-            txt_pw1.setText("");
-            txt_pw2.setText("");
-            buttonGroup1.clearSelection();
-            email.setText("");
-            notelp.setText("");
-            agama.setSelectedItem("");
-            alamat.setText("");
-            btn_tambah.setEnabled(true);
-            JOptionPane.showMessageDialog(null, "Data berhasil diubah", "Pelabuhan App", JOptionPane.INFORMATION_MESSAGE);
-            txt_username.requestFocus();
+            try {
+                Connection c = Koneksi.getKoneksi();
+
+                String sql = "UPDATE tbl_login SET password=?, jenis_kelamin=?, email=?, no_telp=?, agama=?, alamat=? WHERE username=?";
+
+                PreparedStatement p = c.prepareStatement(sql);
+                p.setString(1, pass);
+                p.setString(2, jk);
+                p.setString(3, emaill);
+                p.setString(4, notelpp);
+                p.setString(5, agamaa);
+                p.setString(6, alamatt);
+                p.setString(7, user);
+                p.executeUpdate();
+                p.close();
+            } catch (SQLException e) {
+                System.out.println("Terjadi Error: " + e.getMessage());
+            } finally {
+                loadData();
+                JOptionPane.showMessageDialog(null, "Data Berhasil Diubah", "Informasi", JOptionPane.INFORMATION_MESSAGE);
+            }
+
         }
-        
     }//GEN-LAST:event_btn_ubahActionPerformed
 
     private void tbarangMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbarangMouseClicked
         // TODO add your handling code here:
-        btn_tambah.setEnabled(false);
-        btn_ubah.setEnabled(true);
-        txt_username.setEnabled(false);
-        int i = tbarang.getSelectedRow();
-        if (i == -1) {
-            return;
-        }
-        String user = (String) model.getValueAt(i, 0);
-        txt_username.setText(user);
-
-        String pass = (String) model.getValueAt(i, 1);
-        txt_pw1.setText(pass);
-        txt_pw2.setText(pass);
-
-        String jk = (String) model.getValueAt(i, 2);
-        String l ="Laki-Laki";
-        if(jk.equals(l)){
-            laki.setSelected(true);
-        }else{
-            wanita.setSelected(true);
-        }
-
-        String emaill = (String) model.getValueAt(i, 3);
-        email.setText(emaill);
-
-        String notelpp = (String) model.getValueAt(i, 4);
-        notelp.setText(notelpp);
-
-        String agamaa = (String) model.getValueAt(i, 5);
-        agama.setSelectedItem(agamaa);
-
-        String alamatt = (String) model.getValueAt(i, 6);
-        alamat.setText(alamatt);
+    int i = tbarang.getSelectedRow();
+    if (i == -1) {
+        return;
+    }
+    
+    String username = (String) model.getValueAt(i, 0);
+    txt_username.setText(username);
+    
+    String password = (String) model.getValueAt(i, 1);
+    txt_pw1.setText(password);
+    txt_pw2.setText(password);
+    
+    String jenis_kelamin = (String) model.getValueAt(i, 2);
+    if (jenis_kelamin.equals("Laki-Laki")) {
+        laki.setSelected(true);
+    } else {
+        wanita.setSelected(true);
+    }
+    
+    String emailValue = (String) model.getValueAt(i, 3);
+    email.setText(emailValue);
+    
+    String no_telp = (String) model.getValueAt(i, 4);
+    notelp.setText(no_telp);
+    
+    String agamaValue = (String) model.getValueAt(i, 5);
+    agama.setSelectedItem(agamaValue);
+    
+    String alamatValue = (String) model.getValueAt(i, 6);
+    alamat.setText(alamatValue);
+    
+    btn_tambah.setEnabled(false);
+    btn_ubah.setEnabled(true);
+    txt_username.setEnabled(false);          
     }//GEN-LAST:event_tbarangMouseClicked
 
     private void btn_backActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_backActionPerformed
@@ -527,7 +536,7 @@ public class fpegawai extends javax.swing.JFrame {
     private javax.swing.JButton btn_hapus;
     private javax.swing.JButton btn_tambah;
     private javax.swing.JButton btn_ubah;
-    private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.JTextField email;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
